@@ -51,7 +51,6 @@ object ClientMain {
 
 
 
-    //fuck
     if (args.length < 8) {
       println("Error:parameter not enough")
     } else {
