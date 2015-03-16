@@ -43,9 +43,6 @@ class Client(restIP: String,restPort:Int, centralServer: ActorSelection, followe
 
   centralServer ! Register
 
-//  sendTwitter("ping2")
-//  getInfo("hello")
-//  getTwitter
 
   def printResponse(result: Future[HttpResponse]) = {
     result.foreach { response =>
@@ -59,17 +56,13 @@ class Client(restIP: String,restPort:Int, centralServer: ActorSelection, followe
     val pipeline2 = sendReceive
     val uri = Uri(preURI + "/statuses/update")
     val result = pipeline2(Post(uri.withQuery("userId" -> userId.toString, "content" -> content)))
-//      pipeline2(Post(uri.withQuery("param2" -> "2", "param3" -> "i love you", "p4" -> "$%^&* i do")))
-    //    val result = pipeline2(Post(s"http://localhost:8080/statuses/update?userId=$userId&content=$content"))
-    //printResponse(result)
   }
   def getTwitter = {
     val result = pipeline(Get(preURI + "/" + s"statuses/user_timeline?userId=$userId&num=$twitterRequestedNum"))
-    //printResponse(result)
   }
+  
   def getInfo(content:String) = {
     val result = pipeline(Get(preURI + "/" + content))
-    //printResponse(result)
   }
 
   def simulateBegin = {
@@ -96,17 +89,13 @@ class Client(restIP: String,restPort:Int, centralServer: ActorSelection, followe
       println("server is down, twitter done")
       context stop self
     case s:String=>
-    //      println("from server: " + s)
     case AssignUserId(id, totalUserNum)=>
       userId = id
       val follower = generateFollower(totalUserNum)
-      //println("user id is " + userId)
       centralServer ! FollowerList(userId, follower)
       simulateBegin
     case GenerateTwitter=>
       val content:String = "this is a twitter from " + userId + "!"
-      //      println(userId + "have sent a twitter")
-      //      server ! SendTwitter(userId, content)
       sendTwitter(content)
     case GetTwitter=>
       getTwitter
@@ -128,7 +117,6 @@ class Client(restIP: String,restPort:Int, centralServer: ActorSelection, followe
     for(i <- 1 to followerNum){
       follower += randomGenerator.nextInt(totalUserNum)
     }
-    //    println("i am client" + userId + "---my follower is " + follower)
     return follower
   }
 }
