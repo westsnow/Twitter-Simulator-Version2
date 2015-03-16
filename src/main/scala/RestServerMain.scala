@@ -91,15 +91,9 @@ object RestServerMain extends App with SimpleRoutingApp {
       get {
         path("statuses" / "user_timeline") {
           parameters("userId".as[Int], "num".as[Int]) { (userId, num) =>
-            //println("twitter request")
             val future = restServer ? GetUserHomeline(userId, num)
-//            restServer ! GetUserHomeline(userId, num)
-            //println("result of homeline: " + future)
-
             complete {
-              //"done"
               getContent(future)
-              //            println("done")
             }
           }
         }
@@ -108,11 +102,8 @@ object RestServerMain extends App with SimpleRoutingApp {
       path("followers" / "ids"){
         parameter("userId".as[Int]) { userId=>
           val future = restServer ? GetFollowersIds(userId)
-          //restServer ! GetFollowersIds(userId)
-
           complete {
             getFollowersIds(future)
-            //"done"
           }
         }
       }
@@ -120,7 +111,6 @@ object RestServerMain extends App with SimpleRoutingApp {
       post {
         path("statuses" / "update") {
           parameters("userId".as[Int], "content".as[String]) { (userId, content) =>
-            //println("twitter post")
             restServer ! StatusUpdate(userId, content)
             complete {
               "twitter updated"
